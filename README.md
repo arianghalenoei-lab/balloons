@@ -1,4 +1,5 @@
 /* Constants */
+
 setSize(800, 600); // Make playground larger
 
 const GRAVITY = 0.7;
@@ -15,6 +16,7 @@ const ENEMY_SPEED = 8;
 const PLATFORM_COLOR = "#555555"; // dark gray
 
 /* Global variables */
+
 let player;
 let ground;
 
