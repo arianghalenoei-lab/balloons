@@ -1,0 +1,97 @@
+function main() {
+    let circles = readInt("How many balloons to draw?");
+    let minR = readInt("Enter a minimum radius (0 to 39):");
+    let maxR = readInt("Enter a maximum radius (max 40):");
+    
+    if (maxR > 40) {
+        maxR = 40;
+    }
+    if (minR < 0) {
+        minR = 0;
+    }
+    if (minR > maxR) {
+        // Swap min and max if minR is greater than maxR
+        let temp = minR;
+        minR = maxR;
+        maxR = temp;
+    }
+    
+    createBalloons(circles, minR, maxR);
+}
+
+function createBalloons(num, minRadius, maxRadius = 40) {
+    removeAll();  // Clear the canvas
+    let canvasWidth = getWidth();
+    let canvasHeight = getHeight();
+    let startY = canvasHeight * 2 / 3;
+
+    for (let i = 0; i < num; i++) {
+        // Start X spaced evenly across width with random offset
+        let startX = (canvasWidth / num) * i + randomInt(5, 20);
+        // Random endpoint for string line
+        let endX = startX + randomInt(-15, 15);
+        let endY = randomInt(20, canvasHeight / 3);
+        let radius = randomInt(minRadius, maxRadius);
+
+        drawBalloon(startX, startY, endX, endY, radius);
+    }
+}
+
+function drawBalloon(startX, startY, endX, endY, radius) {
+    // Draw string line with Line object
+    let stringLine = new Line(startX, startY, endX, endY);
+    stringLine.setColor("#555");
+    stringLine.setLineWidth(2);
+    add(stringLine);
+
+    // Draw balloon circle
+    let balloon = new Circle(radius * 2);
+    balloon.setPosition(endX, endY);
+    balloon.setColor(randomColor());
+    add(balloon);
+}
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function randomColor() {
+    // Generate random bright color using HSL converted to HEX
+    let hue = randomInt(0, 359);
+    let saturation = 90;
+    let lightness = 65;
+    return hslToHex(hue, saturation, lightness);
+}
+
+// Convert HSL to hex color for CodeHS
+function hslToHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+    let c = (1 - Math.abs(2 * l - 1)) * s;
+    let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    let m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+
+    if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+    else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+    else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+    else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+    else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+
+    return rgbToHex(r, g, b);
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + [r, g, b].map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+    }).join('');
+}
+
+// Run the program
+main();
